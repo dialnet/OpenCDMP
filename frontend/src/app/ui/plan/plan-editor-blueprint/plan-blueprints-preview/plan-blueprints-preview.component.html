@@ -31,6 +31,7 @@
     </div>
     @if(selectedBlueprint){
         <mat-card class="blueprint-preview pl-2 pr-2">
+			<app-new-plan-info-box></app-new-plan-info-box>
             <mat-card-header class="justify-content-center pb-3">
                 <mat-card-title id="blueprint-title" class="blueprintLabel mt-2">
                     {{'PLAN-BLUEPRINT-PREVIEW.SELECTED-BLUEPRINT.TITLE' | translate : {title: selectedBlueprint.label} }}
@@ -92,7 +93,7 @@
                                     class="unstyled"
                                     [hideToggle]="!section.fields?.length && !section.hasTemplates"
                                     [togglePosition]="'before'"
-                                    [expanded]="true"
+                                    [expanded]="false"
                                     #baseExpansionPanel
                                 >
                                     <mat-expansion-panel-header [class.align-items-start]="section.description && section.label != section.description">
@@ -186,7 +187,7 @@
 <ng-template #blueprintButtonTemplate let-blueprint="blueprint">
     <div
         role="button"
-        (click)="selectedBlueprint = blueprint"
+        (click)="selectBlueprint(blueprint)"
         class="blueprint-select-btn w-100"
         [class.primaryContainer]=" selectedBlueprint && blueprint.groupId == selectedBlueprint.groupId"
         [class.default]="blueprint.groupId == defaultBlueprint?.groupId"
@@ -204,7 +205,7 @@
         [id]="'blueprint-section-' +sectionIndex +'-template-'+templateIndex"
         class="unstyled description-template"
         [togglePosition]="'before'"
-        [expanded]="true"
+        [expanded]="false"
         #baseExpansionPanel
     >
         <mat-expansion-panel-header class="description-template-header">

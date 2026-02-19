@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, Output, QueryList, ViewChildren} from "@angular/core";
+import {AfterViewInit, Component, EventEmitter, inject, Input, NgZone, Output, QueryList, ViewChildren} from "@angular/core";
 import {
 	DescriptionTemplatesInSection,
 	FieldInSection,
@@ -10,7 +10,7 @@ import {
 } from "@app/core/model/plan-blueprint/plan-blueprint";
 import {PlanBlueprintService} from "@app/core/services/plan/plan-blueprint.service";
 import {QueryResult} from "@common/model/query-result";
-import {catchError, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, map, switchMap, take, takeUntil, tap} from "rxjs/operators";
 import {BaseComponent} from "@common/base/base.component";
 import {PlanBlueprintLookup} from "@app/core/query/plan-blueprint.lookup";
 import {IsActive} from "@app/core/common/enum/is-active.enum";
@@ -51,7 +51,7 @@ import { PlanEditorEntityResolver } from "../resolvers/plan-editor-enitity.resol
 
 })
 
-export class PlanBlueprintsPreviewComponent extends BaseComponent {
+export class PlanBlueprintsPreviewComponent extends BaseComponent implements AfterViewInit {
     @ViewChildren('baseExpansionPanel') baseExpansionPanels: QueryList<MatExpansionPanel>;
     @ViewChildren('nestedExpansionPanel') nestedExpansionPanels: QueryList<MatExpansionPanel>;
 	public lookup: PlanBlueprintLookup;
@@ -69,6 +69,8 @@ export class PlanBlueprintsPreviewComponent extends BaseComponent {
 	img = "";
 	exportingPDF = false;
 	dialog = inject(MatDialog);
+    private hasCollapsedInitially = false;
+    private collapseScheduled = false;
 
     planBlueprintSectionFieldCategoryEnum = PlanBlueprintFieldCategory;
 
@@ -117,6 +119,7 @@ export class PlanBlueprintsPreviewComponent extends BaseComponent {
         private planBlueprintService: PlanBlueprintService,
         private descriptionTemplateService: DescriptionTemplateService,
         private tenantHandlingService: TenantHandlingService,
+        private ngZone: NgZone,
         protected httpErrorHandlingService: HttpErrorHandlingService,
         protected enumUtils: EnumUtils
     ) {
@@ -141,7 +144,41 @@ export class PlanBlueprintsPreviewComponent extends BaseComponent {
                 this.selectedBlueprint = this.defaultBlueprint ?? this.planBlueprints?.[0];
             }
 			this.getDescriptionTemplates(this.planBlueprints);
+            this.hasCollapsedInitially = false;
+            this.scheduleInitialCollapse();
         })
+    }
+
+    ngAfterViewInit(): void {
+        this.baseExpansionPanels?.changes
+            .pipe(takeUntil(this._destroyed))
+            .subscribe(() => this.scheduleInitialCollapse());
+        this.nestedExpansionPanels?.changes
+            .pipe(takeUntil(this._destroyed))
+            .subscribe(() => this.scheduleInitialCollapse());
+        this.scheduleInitialCollapse();
+    }
+
+    private scheduleInitialCollapse(): void {
+        if (this.hasCollapsedInitially || this.collapseScheduled || !this.selectedBlueprint) { return; }
+
+        this.collapseScheduled = true;
+        this.ngZone.onStable
+            .pipe(take(1), takeUntil(this._destroyed))
+            .subscribe(() => {
+                this.collapseScheduled = false;
+                const hasPanels = (this.baseExpansionPanels?.length ?? 0) + (this.nestedExpansionPanels?.length ?? 0) > 0;
+                if (!hasPanels || this.hasCollapsedInitially) { return; }
+                this.collapseAll();
+                this.hasCollapsedInitially = true;
+            });
+    }
+
+    selectBlueprint(blueprint: PlanBlueprint): void {
+        if (!blueprint || this.selectedBlueprint?.groupId === blueprint.groupId) { return; }
+        this.selectedBlueprint = blueprint;
+        this.hasCollapsedInitially = false;
+        this.scheduleInitialCollapse();
     }
 	getDescriptionTemplates(planBlueprints){
 		let ids = [];

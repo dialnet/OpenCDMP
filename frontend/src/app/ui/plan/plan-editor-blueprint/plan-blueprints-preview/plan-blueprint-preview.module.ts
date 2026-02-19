@@ -5,6 +5,7 @@ import {DescriptionTemplatesDialogModule} from "@app/ui/plan/plan-editor-bluepri
 import { DescriptionTemplateTableSelectModule } from '../descriptions-template-table-select/description-template-table-select.module';
 import {TextFilterModule} from "@common/modules/text-filter/text-filter.module";
 import {ReactiveFormsModule} from "@angular/forms";
+import {NewPlanInfoBoxComponent} from "@app/ui/plan/new/new-plan-info-box/new-plan-info-box.component";
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import {ReactiveFormsModule} from "@angular/forms";
 		DescriptionTemplatesDialogModule,
 		DescriptionTemplateTableSelectModule,
 		TextFilterModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		NewPlanInfoBoxComponent
 	],
 	declarations: [
 		PlanBlueprintsPreviewComponent
