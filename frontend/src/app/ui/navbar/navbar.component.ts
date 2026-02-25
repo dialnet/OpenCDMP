@@ -53,6 +53,14 @@ export class NavbarComponent extends BaseComponent implements OnInit {
 	@ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
 	extraImageURL: SafeUrl;
 
+	public get navbarTargetUrl(): string {
+		return this.configurationService.navbarLogoUrl || this.routerUtils.generateUrl(['home']);
+	}
+
+	public get navbarTargetIsExternal(): boolean {
+		return /^https?:\/\//i.test(this.navbarTargetUrl);
+	}
+
 	constructor(location: Location,
 		public routerUtils: RouterUtilsService,
 		public authentication: AuthService,
@@ -340,7 +348,7 @@ export class NavbarComponent extends BaseComponent implements OnInit {
 	}
 
     // get toggleFontSizeTooltip(): string {
-    //     return this.language.instant('NAV-BAR.TOGGLE-TEXT-SIZE') + this.language.instant(this.fontService.accessibleFontSignal() ? 'NAV-BAR.SMALLER' : 'NAV-BAR.LARGER') 
+    //     return this.language.instant('NAV-BAR.TOGGLE-TEXT-SIZE') + this.language.instant(this.fontService.accessibleFontSignal() ? 'NAV-BAR.SMALLER' : 'NAV-BAR.LARGER')
     // }
 
     // toggleFontSize() {

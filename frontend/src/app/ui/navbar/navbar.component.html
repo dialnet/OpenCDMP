@@ -7,9 +7,15 @@
                 <div class="icon-bar3"></div>
             </button>
             <h1 class="logo mb-0" >
-                <a [routerLink]="routerUtils.generateUrl(['home'])">
+                @if(navbarTargetIsExternal){
+                <a [href]="navbarTargetUrl" target="_blank" rel="noreferrer">
                     <img class="logo-image" alt="{{('ALT-TEXT.GO-TO-MAIN' | translate) ?? 'go to main page'}}" [src]="'../../../assets/images/nav-logo' + configurationService.navLogoExtension">
                 </a>
+                } @else {
+                <a [routerLink]="navbarTargetUrl">
+                    <img class="logo-image" alt="{{('ALT-TEXT.GO-TO-MAIN' | translate) ?? 'go to main page'}}" [src]="'../../../assets/images/nav-logo' + configurationService.navLogoExtension">
+                </a>
+                }
             </h1>
             @if(extraImageURL){
                 <a class="extra-logo" [routerLink]="routerUtils.generateUrl(['home'])">
@@ -28,9 +34,9 @@
 					<button type="button" mat-flat-button color="primary" class="start-new-plan-btn padded-shadow-btn" (click)="openNewPlanDialog()">{{ 'NAV-BAR.START-NEW-PLAN' | translate }}</button>
 				<!-- </li>
                 <li class="navbar-item-lg">
-                    <button mat-icon-button 
-                        (click)="toggleFontSize()" 
-                        [matTooltip]="toggleFontSizeTooltip" 
+                    <button mat-icon-button
+                        (click)="toggleFontSize()"
+                        [matTooltip]="toggleFontSizeTooltip"
                         [attr.aria-label]="toggleFontSizeTooltip"
                     >
                         <mat-icon aria-hidden>format_size</mat-icon>
@@ -62,10 +68,10 @@
 						<app-language (languageChange)="getLanguage($event)"></app-language>
 					</mat-menu>
 					<button mat-icon-button class="notification-button" color="primary" matTooltip="{{'NAV-BAR.INAPP-NOTIFICATIONS' | translate}}" (click)="toggleInAppNotifications()" [attr.aria-label]="'ALT-TEXT.NOTIFICATIONS' | translate">
-						<mat-icon 
-                            [matBadge]="inAppNotificationCount" 
-                            [matBadgeHidden]="inAppNotificationCount <= 0" 
-                            matBadgeColor="warn" aria-hidden="false" 
+						<mat-icon
+                            [matBadge]="inAppNotificationCount"
+                            [matBadgeHidden]="inAppNotificationCount <= 0"
+                            matBadgeColor="warn" aria-hidden="false"
                             [attr.aria-label]="inAppNotificationCount + ('ALT-TEXT.NOTIFICATIONS' | translate)"
                             class="notifications-icon"
                         >
@@ -93,7 +99,7 @@
             </ng-template>
 
 			<mat-menu #toggleMenu="matMenu">
-                <ul class="list m-2">       
+                <ul class="list m-2">
                     <li class="d-flex justify-content-center">
                         <ng-container *ngTemplateOutlet="userSettingsTemplate" tabindex="0"/>
                     </li>

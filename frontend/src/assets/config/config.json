@@ -2,6 +2,7 @@
 	"Server": "${WEBAPP_API_URL}",
 	"App": "${INSTALLATION_URL}",
 	"defaultCulture": "${DEFAULT_CULTURE}",
+	"navbarLogoUrl": "${NAVBAR_LOGO_URL}",
 	"keycloak": {
 		"enabled": true,
 		"address": "${KEYCLOAK_ADDRESS}",

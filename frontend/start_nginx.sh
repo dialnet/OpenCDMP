@@ -1,12 +1,12 @@
 #!/bin/bash
 if [[ ! -z "${WEBAPP_BASE_URL}" ]]; then
-	rm /usr/share/nginx/html/index.html 
-	cp /usr/share/nginx/html/index_base.html /usr/share/nginx/html/index.html 
-	find '/usr/share/nginx/html' -name 'index.html' -exec sed -i -e 's,<base href="/">,<base href="'"$WEBAPP_BASE_URL"'">,g' {} \; 
+	rm /usr/share/nginx/html/index.html
+	cp /usr/share/nginx/html/index_base.html /usr/share/nginx/html/index.html
+	find '/usr/share/nginx/html' -name 'index.html' -exec sed -i -e 's,<base href="/">,<base href="'"$WEBAPP_BASE_URL"'">,g' {} \;
 fi
 
 if [[ ! -z "${WEBAPP_API_URL}" ]]; then
-	find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${WEBAPP_API_URL},'"$WEBAPP_API_URL"',g' {} \; 
+	find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${WEBAPP_API_URL},'"$WEBAPP_API_URL"',g' {} \;
 else
    find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${WEBAPP_API_URL},,g' {} \;
 fi
@@ -21,6 +21,12 @@ if [[ ! -z "${DEFAULT_CULTURE}" ]]; then
 	find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${DEFAULT_CULTURE},'"$DEFAULT_CULTURE"',g' {} \;
 else
    find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${DEFAULT_CULTURE},en,g' {} \;
+fi
+
+if [[ ! -z "${NAVBAR_LOGO_URL}" ]]; then
+	find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${NAVBAR_LOGO_URL},'"$NAVBAR_LOGO_URL"',g' {} \;
+else
+   find '/usr/share/nginx/html/assets/config' -name 'config.json' -exec sed -i -e 's,${NAVBAR_LOGO_URL},,g' {} \;
 fi
 
 if [[ ! -z "${KEYCLOAK_ADDRESS}" ]]; then

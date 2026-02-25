@@ -45,6 +45,11 @@ export class ConfigurationService extends BaseComponent {
 		return this._navLogoExtension || '.svg';
 	}
 
+	private _navbarLogoUrl: string;
+	get navbarLogoUrl(): string {
+		return this._navbarLogoUrl;
+	}
+
 	private _logging: Logging;
 	get logging(): Logging {
 		return this._logging;
@@ -271,6 +276,9 @@ export class ConfigurationService extends BaseComponent {
 		this._logging = Logging.parseValue(config.logging);
 		this._lockInterval = config.lockInterval;
 		this._navLogoExtension = config.navLogoExtension;
+		this._navbarLogoUrl = typeof config.navbarLogoUrl === 'string' && /^\$\{.+\}$/.test(config.navbarLogoUrl)
+			? null
+			: config.navbarLogoUrl;
 		this._orcidPath = config.orcidPath;
 		this._maxFileSizeInMB = config.maxFileSizeInMB;
 		this._userSettingsVersion = config.userSettingsVersion;
