@@ -22,3 +22,11 @@
 	margin-top: 1rem;
 	color: rgba(0, 0, 0, 0.7);
 }
+.subtitle span.keypoint{
+	font-weight: 600;
+}
+.subtitle span.keypoint::before {
+	content: "•";
+	margin-right: 0.5rem;
+}
+
